@@ -11,20 +11,20 @@
 #include "AST/Latex.h"
 #include "DifferentiatorController.h"
 
-using namespace Diff;
+using namespace DC;
 
 int main()
 {
-    std::ifstream expr("D:\\Projects C++\\Differentiator\\src\\Expression.txt");
+    std::ifstream expr ("D:\\Projects C++\\Differentiator\\src\\Expression.txt");
 
     DifferentiatorController dc (
         expr, std::cout,                   
         Flags::InputFormat (Format::ordinary),
         Flags::OutputFormat (Format::ordinary),
-        Flags::DoInitialTreeDump (false),  
-        Flags::DoDifferentiatedTreeDump (false), 
-        Flags::DoOptimizedDump (false), 
-        Flags::DoErrorConstructedTreeDump (false) 
+        Flags::DoInitialTreeDump (true),  
+        Flags::DoDifferentiatedTreeDump (true), 
+        Flags::DoOptimizedTreeDump (true), 
+        Flags::DoErrorConstructedTreeDump (true) 
     );
 
     dc.run();

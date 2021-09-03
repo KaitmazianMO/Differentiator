@@ -1,20 +1,18 @@
+#ifndef GRAPHVIZ_H_INCLUDED
+#define GRAPHVIZ_H_INCLUDED
+
+
 #include "Visitor.h"
 #include "../VisualStudioWarnings.h"
 
 #include <string>
 #include <fstream>
 
-/*
- *
- * @todo RAII_FILE 
- *
- */
-
-class graphwiz_Writer
+class GraphwizForamter
 {		
 public:
-	graphwiz_Writer (const std::string& gv_file);
-   ~graphwiz_Writer ();
+	GraphwizForamter(std::ostream & os);
+   ~GraphwizForamter();
 
 	enum class Shape
 	{
@@ -26,20 +24,25 @@ public:
 	void addEdje (size_t from, size_t to, const std::string& label);
 
 private:
-	const std::string  gv_file_name;
-	FILE              *file_ptr = nullptr;
+	std::ostream &out;
 };
 
-class GraphvizPrint : public VisitorVoid
+class GraphvizPrinter : public VisitorVoid
 {
 public:
-	GraphvizPrint (const std::string& gv_file_name);
+	GraphvizPrinter (std::ostream &os);
 
 	void visit (NumberNode *)   override;
 	void visit (VariableNode *) override;
 	void visit (BinOpNode *)    override;
 	void visit (FunctionNode *) override;
 
+	static bool dump (std::ostream &os, ExpressionNode *AST);
+	static bool dump (const std::string &file_name, ExpressionNode *AST);
+
 private:
-	graphwiz_Writer gv_writer;	
+	GraphwizForamter gv_writer;	
 };
+
+
+#endif

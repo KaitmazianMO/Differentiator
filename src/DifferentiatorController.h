@@ -7,7 +7,7 @@
 
 #include <fstream>
 
-namespace Diff
+namespace DC
 { 
     enum class Format 
     {
@@ -20,14 +20,14 @@ namespace Diff
         struct InputFormat  { explicit InputFormat  (Format f) : format (f) {} Format format; };
         struct DoInitialTreeDump            { explicit DoInitialTreeDump          (bool dump) : active (dump) {} bool active; };
         struct DoDifferentiatedTreeDump     { explicit DoDifferentiatedTreeDump   (bool dump) : active (dump) {} bool active; };
-        struct DoOptimizedDump              { explicit DoOptimizedDump            (bool dump) : active (dump) {} bool active; };
+        struct DoOptimizedTreeDump          { explicit DoOptimizedTreeDump        (bool dump) : active (dump) {} bool active; };
         struct DoErrorConstructedTreeDump   { explicit DoErrorConstructedTreeDump (bool dump) : active (dump) {} bool active; };
     
         InputFormat                input                       = InputFormat   (Format::ordinary);
         OutputFormat               output                      = OutputFormat (Format::ordinary);
         DoInitialTreeDump          initial_tree_dump           = DoInitialTreeDump (false);  
         DoDifferentiatedTreeDump   differentiated_tree_dump    = DoDifferentiatedTreeDump (false); 
-        DoOptimizedDump            optimized_tree_dump         = DoOptimizedDump (false); 
+        DoOptimizedTreeDump        optimized_tree_dump         = DoOptimizedDump (false); 
         DoErrorConstructedTreeDump error_constructed_tree_dump = DoErrorConstructedTreeDump (false); 
     };
     
@@ -41,7 +41,7 @@ namespace Diff
             Flags::OutputFormat oformat = Flags::OutputFormat (Format::ordinary),
             Flags::DoInitialTreeDump initial_tree_dump = Flags::DoInitialTreeDump (false),  
             Flags::DoDifferentiatedTreeDump differentiated_tree_dump = Flags::DoDifferentiatedTreeDump (false), 
-            Flags::DoOptimizedDump optimized_tree_dump = Flags::DoOptimizedDump (false), 
+            Flags::DoOptimizedTreeDump optimized_tree_dump = Flags::DoOptimizedTreeDump (false), 
             Flags::DoErrorConstructedTreeDump error_constructed_tree_dump = Flags::DoErrorConstructedTreeDump (false) 
         );
     
@@ -50,7 +50,7 @@ namespace Diff
             Flags::OutputFormat oformat = Flags::OutputFormat (Format::ordinary),
             Flags::DoInitialTreeDump initial_tree_dump = Flags::DoInitialTreeDump (false),  
             Flags::DoDifferentiatedTreeDump differentiated_tree_dump = Flags::DoDifferentiatedTreeDump (false), 
-            Flags::DoOptimizedDump optimized_tree_dump = Flags::DoOptimizedDump (false), 
+            Flags::DoOptimizedTreeDump optimized_tree_dump = Flags::DoOptimizedTreeDump (false), 
             Flags::DoErrorConstructedTreeDump error_constructed_tree_dump = Flags::DoErrorConstructedTreeDump (false)
         );
 

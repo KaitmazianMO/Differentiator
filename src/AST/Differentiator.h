@@ -1,11 +1,6 @@
 #ifndef DIFFERENTIATOR_H_INCLUDED
 #define DIFFERENTIATOR_H_INCLUDED
 
-/*
- * 
- * @bug When copy in mull differantiating we copy ekft and right and don't call differantiating function
- * 
- */
 
 #include "Visitor.h"
 

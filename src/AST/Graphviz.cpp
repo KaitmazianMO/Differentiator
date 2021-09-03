@@ -2,79 +2,67 @@
 
 #include "Expression.h"
 
-graphwiz_Writer::graphwiz_Writer (const std::string& gv_file) :
-	gv_file_name    (gv_file),
-	file_ptr (fopen (gv_file_name.c_str(), "wb"))
+GraphwizForamter::GraphwizForamter (std::ostream & os) :
+	out (os)
 {
-	if (file_ptr)
-	{ 
-		fprintf (file_ptr, "digraph G {\n");
-	}
+	out << "digraph G {\n";
 }
 
-graphwiz_Writer::~graphwiz_Writer()
+void GraphwizForamter::addVertex (size_t handle, const std::string &label, Shape shape)
 {
-	if (file_ptr)
-	{ 
-		fprintf (file_ptr, "}\n");
-		fclose (file_ptr);
-		file_ptr = nullptr;
-	}
+	std::string spape_format;							
+	if (shape == GraphwizForamter::Shape::reclangle)
+		spape_format = "rect";
+	else 
+		spape_format = "circle";
+
+	out << "\t" << handle << " [shape = \"" << spape_format << "\" " 
+		<< "label = \"" << label << "\"]" << std::endl;
+	/*fprintf (file_ptr, "\t%zu [shape = \"%s\" label = \"%s\"]\n",
+		handle, spape_format.c_str(), label.c_str());*/
 }
 
-void graphwiz_Writer::addVertex (size_t handle, const std::string &label, Shape shape)
+void GraphwizForamter::addEdje (size_t from, size_t to, const std::string &label)
+{	
+	out << "\t" << from << " -> " << to << "[label = \"" << label << "\"]" << std::endl;
+	//fprintf (file_ptr, "\t%zu -> %zu [label = \"%s\"]\n", from, to, label.c_str());
+}
+
+GraphwizForamter::~GraphwizForamter()
 {
-	if (file_ptr)
-	{
-		std::string spape_format;							
-		if (shape == graphwiz_Writer::Shape::reclangle)
-			spape_format = "rect";
-		else 
-			spape_format = "circle";
-
-		fprintf (file_ptr, "\t%zu [shape = \"%s\" label = \"%s\"]\n",
-			handle, spape_format.c_str(), label.c_str());
-	}
+	out << "}";
 }
 
-void graphwiz_Writer::addEdje (size_t from, size_t to, const std::string &label)
-{																					  
-	if (file_ptr)
-	{
-		fprintf (file_ptr, "\t%zu -> %zu [label = \"%s\"]\n", from, to, label.c_str());
-	}
-}
-
-GraphvizPrint::GraphvizPrint (const std::string &gv_file_name) :
-	gv_writer (gv_file_name)
+GraphvizPrinter::GraphvizPrinter (std::ostream &os) :
+	gv_writer (os)
 {
 }
 
-void GraphvizPrint::visit (NumberNode *pnode)   
+void GraphvizPrinter::visit (NumberNode *pnode)   
 {
 	if (pnode)
 	{
 		gv_writer.addVertex (
 			reinterpret_cast<size_t> (pnode),
 			std::to_string (pnode->val),
-			graphwiz_Writer::Shape::reclangle
+			GraphwizForamter::Shape::reclangle
 		);
 	}
 }
 
-void GraphvizPrint::visit (VariableNode *pnode) 
+void GraphvizPrinter::visit (VariableNode *pnode) 
 {										
 	if (pnode)
 	{
 		gv_writer.addVertex (
 			reinterpret_cast<size_t> (pnode),
 			pnode->name,
-			graphwiz_Writer::Shape::reclangle
+			GraphwizForamter::Shape::reclangle
 		);
 	}
 }
 
-void GraphvizPrint::visit (BinOpNode *pnode)    
+void GraphvizPrinter::visit (BinOpNode *pnode)    
 {						
 	if (pnode)
 	{
@@ -87,12 +75,12 @@ void GraphvizPrint::visit (BinOpNode *pnode)
 		gv_writer.addVertex (
 			reinterpret_cast<size_t> (pnode),
 			to_string (pnode->op),
-			graphwiz_Writer::Shape::circle
+			GraphwizForamter::Shape::circle
 		); 
 	}		 
 }
 
-void GraphvizPrint::visit (FunctionNode *pnode) 
+void GraphvizPrinter::visit (FunctionNode *pnode) 
 {	
 	if (pnode)
 	{ 
@@ -101,11 +89,32 @@ void GraphvizPrint::visit (FunctionNode *pnode)
 		gv_writer.addVertex (
 			reinterpret_cast<size_t> (pnode), 
 			to_string (pnode->func), 
-			graphwiz_Writer::Shape::circle);		 
+			GraphwizForamter::Shape::circle);		 
 		gv_writer.addEdje (
 			reinterpret_cast<size_t> (pnode), 
 			reinterpret_cast<size_t> (pnode->arg), 
 			""
 		);		
 	}
+}
+
+bool GraphvizPrinter::dump (std::ostream &os, ExpressionNode *AST)
+{
+	GraphvizPrinter gprinter (os);
+	if (AST)
+	{
+		AST->doAction (&gprinter);
+		return true;
+	}
+
+	return false;
+}
+
+bool GraphvizPrinter::dump (const std::string &file_name, ExpressionNode *AST)
+{
+	std::ofstream file (file_name + ".dot");
+	if (file.bad())
+		return false;
+
+	return dump (file, AST);
 }

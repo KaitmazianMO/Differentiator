@@ -14,15 +14,13 @@
 #include "AST/Ordinary.h"
 #include "AST/Optimizer.h"
 
-using namespace Diff;
+using namespace DC;
 
 std::string readFromStream (std::istream& stream);
 inline void log (const std::string &msg) { std::cerr << msg << std::endl; }
 inline void massiveLatexEquationWritingPattern (std::ostream &os, ExpressionNode *exprAST);
 
-void gv_dump (const std::string&, ExpressionNode *expr) {}
-
-Diff::DifferentiatorController::DifferentiatorController (             
+DC::DifferentiatorController::DifferentiatorController (             
     std::istream& expression_stream_,
     std::ostream& output_stream_,      
     Flags::InputFormat iformat,
@@ -42,7 +40,7 @@ Diff::DifferentiatorController::DifferentiatorController (
     flags.error_constructed_tree_dump = error_constructed_tree_dump;
 }
 
-void Diff::DifferentiatorController::run()  
+void DC::DifferentiatorController::run()  
 {   
     log ("Start reading expression...");
     std::string expression = readFromStream (expression_stream);
@@ -64,19 +62,22 @@ void Diff::DifferentiatorController::run()
     }
     catch (const BasicException &bex)
     {
-        if (flags.error_constructed_tree_dump.active) gv_dump ("Initial expression (error)", parser.getAST());
+        if (flags.error_constructed_tree_dump.active) 
+            GraphvizPrinter::dump ("InitialExpression(error)", parser.getAST());
         ASTDeleter::free (parser.getAST());
         throw;
     }                                                    
     log ("Finished parsing.");
 
-    if (flags.initial_tree_dump.active) gv_dump ("Initial expression", parser.getAST());
+    if (flags.initial_tree_dump.active) 
+        GraphvizPrinter::dump ("InitialExpression", parser.getAST());
 
     log ("Differentiating...");
     auto diff_AST = Differentiator::differentiate (parser.getAST());
     log ("Differentiating's finished.");
 
-    if (flags.differentiated_tree_dump.active) gv_dump ("Differentiated expression", parser.getAST());
+    if (flags.differentiated_tree_dump.active) 
+        GraphvizPrinter::dump ("DifferentiatedExpression", diff_AST);
 
     log ("Deleting source AST...");
     ASTDeleter::free (parser.getAST()); 
@@ -93,7 +94,7 @@ void Diff::DifferentiatorController::run()
     ASTDeleter::free (diff_AST);
 }
 
-Flags Diff::DifferentiatorController::bind (
+Flags DC::DifferentiatorController::bind (
     Flags::InputFormat iformat,
     Flags::OutputFormat oformat,
     Flags::DoInitialTreeDump initial_tree_dump,  
@@ -114,7 +115,7 @@ Flags Diff::DifferentiatorController::bind (
     return old_flags;
 }
 
-Flags Diff::DifferentiatorController::bind (Flags flags_)
+Flags DC::DifferentiatorController::bind (Flags flags_)
 {
     return bind (
         flags_.input, flags_.output,
