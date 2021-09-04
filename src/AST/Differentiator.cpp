@@ -66,8 +66,31 @@ ExpressionNode *Differentiator::visit (FunctionNode *pnode)
             return new BinOpNode (diff_arg, Operation::mul, cos);
         }
         case Function::cos:
+        {
+            FunctionNode *sin = new FunctionNode (Function::sin, pnode->arg->deepCopy());
+            ExpressionNode *diff_arg_with_minus = 
+                new BinOpNode (new NumberNode (-1),
+                Operation::mul,
+                sin->arg->getAction (this)
+            );
+            return new BinOpNode (diff_arg_with_minus, Operation::mul, sin);
+        }
         case Function::tg:
+        {
+            auto cos = new FunctionNode (Function::cos, pnode->arg->deepCopy());
+            auto denomerator = new BinOpNode (cos, Operation::mul, cos);
+            auto numerator = pnode->arg->getAction (this);
+            return new BinOpNode (numerator, Operation::div, denomerator);
+            break;
+        }
+        
         case Function::ln:
+        {
+            auto denomerator = pnode->arg->deepCopy();
+            auto numerator   = pnode->arg->lightCopy()->getAction (this);
+            return new BinOpNode (numerator, Operation::div, denomerator);
+            break;
+        }
         default:
             return nullptr; 
         }

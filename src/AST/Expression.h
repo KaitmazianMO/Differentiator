@@ -59,7 +59,7 @@ struct VariableNode : ExpressionNode
 };
 
 enum class Operation { add, sub, mul, div, nop };
-//bool operator < (Operation, Operation);
+bool operator < (Operation, Operation);
 std::string to_string (Operation op);
 Operation   to_operation (const std::string& op_str);
 Operation machOperation (const std::string& op_str);

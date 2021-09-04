@@ -35,17 +35,21 @@ void LatexExpressionFormater::visit (BinOpNode *pnode)
 
         case Operation::mul:                      
             pnode->left-> doAction (this);
-            expression += "\\times ";
+            expression += " \\times ";
             pnode->right->doAction (this);
             break;
 
         case Operation::div:                      
             expression += " \\cfrac { ";
-            pnode->left-> doAction (this);
+            ops.push (Operation (0)); // numerator don't need any priority operation parens
+            pnode->left-> doAction (this);         
+            ops.pop();                // it's already have figure braces {}
             expression += " } ";
                                                               
             expression += " { ";
+            ops.push (Operation (0));
             pnode->right->doAction (this);                      
+            ops.pop();
             expression += " } ";
             break;
         

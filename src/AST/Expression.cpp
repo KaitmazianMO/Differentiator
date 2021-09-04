@@ -121,6 +121,19 @@ Operation machOperation (const std::string &op_str)
     return Operation::nop;
 }
 
+bool operator < (Operation l, Operation r)
+{
+    if ((l == Operation::add || l == Operation::sub) &&
+        (r == Operation::add || r == Operation::sub))
+    return false;
+
+    if ((l == Operation::mul || l == Operation::div) &&
+        (r == Operation::mul || r == Operation::div))
+    return false;
+
+    return int (l) < int (r); // avoiding recursion
+}
+
 BinOpNode::BinOpNode (ExprNodePtr L, Operation operation, ExprNodePtr R, const Location& loc_) :
     ExpressionNode (loc_),
     left  (L),
