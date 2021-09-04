@@ -9,6 +9,7 @@
 #include "../File.h"
 #include "../NonCopyable.h"
 #include "../BasicException.h"
+#include "../Context.h"
 
 class LexerException : public BasicException
 {
@@ -67,7 +68,7 @@ private:
 
     const char        *source_code;               
     Location           curr_loc;
-    std::vector<Token> tokens;     
+    std::vector<Token> tokens; 
 };
 
 #endif // !LEXER_H_INCLUDED

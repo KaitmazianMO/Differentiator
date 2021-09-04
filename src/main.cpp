@@ -15,19 +15,28 @@ using namespace DC;
 
 int main()
 {
-    std::ifstream expr ("D:\\Projects C++\\Differentiator\\src\\Expression.txt");
+    try 
+    {
 
-    DifferentiatorController dc (
-        expr, std::cout,                   
-        Flags::InputFormat (Format::ordinary),
-        Flags::OutputFormat (Format::ordinary),
-        Flags::DoInitialTreeDump (true),  
-        Flags::DoDifferentiatedTreeDump (true), 
-        Flags::DoOptimizedTreeDump (true), 
-        Flags::DoErrorConstructedTreeDump (true) 
-    );
+        std::ifstream expr_in ("D:\\Projects C++\\Differentiator\\src\\Expression.txt");
+        std::ofstream latex_expr_out ("D:\\Projects C++\\Differentiator\\src\\Latex.tex");
 
-    dc.run();
+        DifferentiatorController dc (
+            expr_in, latex_expr_out,                   
+            Flags::InputFormat (Format::ordinary),
+            Flags::OutputFormat (Format::latex),
+            Flags::DoInitialTreeDump (true),  
+            Flags::DoDifferentiatedTreeDump (true), 
+            Flags::DoOptimizedTreeDump (true), 
+            Flags::DoErrorConstructedTreeDump (true) 
+        );
+
+        dc.run ("x");
+    } 
+    catch (std::exception &ex)
+    {
+        std::cerr << "error: " << ex.what() << std::endl;
+    }
 
     //std::ifstream source_stream ("D:\\Projects C++\\Differentiator\\src\\Expression.txt");
     //std::string source_code = readFromStream (source_stream);

@@ -22,12 +22,12 @@ inline void massiveLatexEquationWritingPattern (std::ostream &os, ExpressionNode
 
 DC::DifferentiatorController::DifferentiatorController (             
     std::istream& expression_stream_,
-    std::ostream& output_stream_,      
+    std::ostream& output_stream_,   
     Flags::InputFormat iformat,
     Flags::OutputFormat oformat,
     Flags::DoInitialTreeDump initial_tree_dump,  
     Flags::DoDifferentiatedTreeDump differentiated_tree_dump, 
-    Flags::DoOptimizedDump optimized_tree_dump, 
+    Flags::DoOptimizedTreeDump optimized_tree_dump, 
     Flags::DoErrorConstructedTreeDump error_constructed_tree_dump 
 ) : expression_stream (expression_stream_),
     output_stream     (output_stream_)
@@ -40,7 +40,7 @@ DC::DifferentiatorController::DifferentiatorController (
     flags.error_constructed_tree_dump = error_constructed_tree_dump;
 }
 
-void DC::DifferentiatorController::run()  
+void DC::DifferentiatorController::run (const std::string &diff_var)  
 {   
     log ("Start reading expression...");
     std::string expression = readFromStream (expression_stream);
@@ -73,7 +73,7 @@ void DC::DifferentiatorController::run()
         GraphvizPrinter::dump ("InitialExpression", parser.getAST());
 
     log ("Differentiating...");
-    auto diff_AST = Differentiator::differentiate (parser.getAST());
+    auto diff_AST = Differentiator::differentiate (parser.getAST(), Context (diff_var));
     log ("Differentiating's finished.");
 
     if (flags.differentiated_tree_dump.active) 
@@ -99,7 +99,7 @@ Flags DC::DifferentiatorController::bind (
     Flags::OutputFormat oformat,
     Flags::DoInitialTreeDump initial_tree_dump,  
     Flags::DoDifferentiatedTreeDump differentiated_tree_dump, 
-    Flags::DoOptimizedDump optimized_tree_dump, 
+    Flags::DoOptimizedTreeDump optimized_tree_dump, 
     Flags::DoErrorConstructedTreeDump error_constructed_tree_dump 
 )
 {

@@ -27,7 +27,7 @@ namespace DC
         OutputFormat               output                      = OutputFormat (Format::ordinary);
         DoInitialTreeDump          initial_tree_dump           = DoInitialTreeDump (false);  
         DoDifferentiatedTreeDump   differentiated_tree_dump    = DoDifferentiatedTreeDump (false); 
-        DoOptimizedTreeDump        optimized_tree_dump         = DoOptimizedDump (false); 
+        DoOptimizedTreeDump        optimized_tree_dump         = DoOptimizedTreeDump (false); 
         DoErrorConstructedTreeDump error_constructed_tree_dump = DoErrorConstructedTreeDump (false); 
     };
     
@@ -36,7 +36,7 @@ namespace DC
     public:
         explicit DifferentiatorController (
             std::istream& expression_stream,
-            std::ostream& output_stream,      
+            std::ostream& output_stream,   
             Flags::InputFormat iformat = Flags::InputFormat (Format::ordinary),
             Flags::OutputFormat oformat = Flags::OutputFormat (Format::ordinary),
             Flags::DoInitialTreeDump initial_tree_dump = Flags::DoInitialTreeDump (false),  
@@ -56,7 +56,7 @@ namespace DC
 
         Flags bind (Flags);
 
-        void run();
+        void run (const std::string &diff_var);
     
     private:
         Flags         flags;

@@ -31,7 +31,7 @@ Token Lexer::getNextTok()
         if (isalpha (front))
             return getIdentifierlToken();
 
-        if (isdigit (front) && front != '+')
+        if (isdigit (front) && front != '+') // don't support unary plus
             return getNumberToken();
 
         switch (front)
@@ -93,6 +93,7 @@ Token Lexer::getIdentifierlToken()
     std::cout << "The last id char " << curr_loc.peek() << "(" << int (curr_loc.peek()) << ")" << std::endl;
 
     Token tok = newToken (TokType::identifier);
+
     return tok;
 }
 

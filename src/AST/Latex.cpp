@@ -54,7 +54,6 @@ void LatexExpressionFormater::visit (BinOpNode *pnode)
             expression += " NOP ";
             pnode->right->doAction (this);
             break;
-
         }
         if (pnode->op < prev_op) expression += "\\right)"; 
         
@@ -67,7 +66,7 @@ void LatexExpressionFormater::visit (FunctionNode *pnode)
     if (pnode) 
     {        
         expression += ::to_string (pnode->func) + "(";
-        pnode->doAction (this);
+        pnode->arg->doAction (this);
         expression += ")";
     }
 }

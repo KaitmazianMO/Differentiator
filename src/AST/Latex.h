@@ -13,7 +13,7 @@
 class LatexExpressionFormater : public VisitorVoid
 {
 public:
-	LatexExpressionFormater() = default;
+	LatexExpressionFormater() { ops.push (static_cast<Operation> (0)); }; // pushing the lowest priority op for skipping first parens
    ~LatexExpressionFormater() = default;
 
 	void visit (NumberNode *)   override;

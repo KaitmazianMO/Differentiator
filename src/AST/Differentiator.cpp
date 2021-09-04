@@ -8,7 +8,10 @@ ExpressionNode *Differentiator::visit (NumberNode *pnode)
 
 ExpressionNode *Differentiator::visit (VariableNode *pnode)
 {
-    return new NumberNode (1);
+    if (pnode && context.isDiffVar (pnode->name))
+        return new NumberNode (1);
+
+    return new NumberNode (0);
 }
                                 
 #define DIFF_LNC  (pnode->left->lightCopy()->getAction (this))
@@ -72,9 +75,9 @@ ExpressionNode *Differentiator::visit (FunctionNode *pnode)
     return nullptr;
 }
 
-ExpressionNode *Differentiator::differentiate (ExpressionNode *pnode)
+ExpressionNode *Differentiator::differentiate (ExpressionNode *pnode, const Context &context)
 {
-    static Differentiator differentiator;
+    Differentiator differentiator (context);
     if (pnode)
     {
         return pnode->getAction (&differentiator);
