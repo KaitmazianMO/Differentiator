@@ -37,14 +37,17 @@ bool Context::setValue (const std::string &name, double val)
 void Context::setDiffVar (const std::string &name)
 {
     differentiating_varriable = name;
+    newName (name);
 }
 
 Context::Context (const std::string &diff_var)
     : differentiating_varriable (diff_var)
 {
+    newName (diff_var);
 }
 
 Context::Context()
     : differentiating_varriable ("x")
 {
+    newName (differentiating_varriable);
 }

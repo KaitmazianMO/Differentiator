@@ -13,6 +13,7 @@
 #include "AST/Latex.h"
 #include "AST/Ordinary.h"
 #include "AST/Optimizer.h"
+#include "AST/Calculator.h"
 
 using namespace DC;
 
@@ -72,7 +73,8 @@ void DC::DifferentiatorController::run (const std::string &diff_var)
         GraphvizPrinter::dump ("InitialExpression", parser.getAST());
 
     log ("Differentiating...");
-    auto diff_AST = Differentiator::differentiate (parser.getAST(), Context (diff_var));
+    Context context (diff_var);
+    auto diff_AST = Differentiator::differentiate (parser.getAST(), context);
     log ("Differentiating's finished.");
 
     if (flags.differentiated_tree_dump.active) 
@@ -87,8 +89,14 @@ void DC::DifferentiatorController::run (const std::string &diff_var)
     else if (flags.output.format == Format::ordinary)
         output_stream << OrdinaryExpressionFormater::to_string (diff_AST) << std::endl;
     log ("Finished writing.");
-
+    
     //optimize (diff_AST);
+    std::cout << "Enter " << diff_var << ": ";
+    double dval = 0;
+    std::cin >> dval;
+    std::cout << "dval = " << dval << std::endl;
+    context.setValue (diff_var, dval);
+    std::cout << "Derivative value: " << Calculator::calculate (diff_AST, context) << std::endl;
 
     ASTDeleter::free (diff_AST);
 }
