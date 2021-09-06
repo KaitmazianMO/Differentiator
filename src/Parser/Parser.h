@@ -27,37 +27,24 @@
  * C := [a-b] | [a-b]() | +-[0-9] | (expression)
  */
 
-using ParserException = BasicException;
+class ParserException : public BasicException
+{
+public:
+    ParserException (const std::string &msg) :
+        BasicException (msg)
+    {
+    }
+                                                      
+    ParserException (const Location& loc) :
+        BasicException ("", loc)
+    {
+    }
 
-//class ParserException : public BasicException
-//{
-//public:
-//    ParserException (const std::string &msg) :
-//        BasicException (msg)
-//    {
-//    }
-//                                                      
-//    ParserException (const Location& loc) :
-//        BasicException (""),
-//        err_loc (loc)
-//    {
-//    }
-//
-//    ParserException (const std::string &msg, const Location& loc) :
-//        BasicException (msg),
-//        err_loc (loc)
-//    {
-//    }
-//
-//
-//    const Location &errLoc()
-//    {
-//        return err_loc;
-//    }
-//
-//private:
-//    Location err_loc;
-//};
+    ParserException (const std::string &msg, const Location& loc) :
+        BasicException (msg, loc)
+    {
+    }
+};
 
 class Parser : NonCopyable
 {
@@ -72,16 +59,13 @@ private:
     ExprNodePtr parseC();
 
 
-    ExprNodePtr parseExpression();
-    ExprNodePtr parsePrimary();
-    ExprNodePtr parseParen();
     ExprNodePtr parseNumber();
     ExprNodePtr parseIdentifier();
-    ExprNodePtr parseBinOperationRHS(int prec, ExprNodePtr LHS);
     ExprNodePtr parseFunction();
     ExprNodePtr parseVariable();
 
     void error (const std::string &msg) { throw ParserException (msg, current_token->loc); }
+    void errorExpected (const std::string &expected, const std::string &had) { throw ParserException ("Expected \'" + expected + "\', but had " + had, current_token->loc); }
 
     void getNextToken() { ++current_token; }
     void getPrevToken() { --current_token; }

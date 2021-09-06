@@ -31,7 +31,7 @@ public:
     }
 
 private:
-    Location err_loc;
+    const Location err_loc;
 };
 
 

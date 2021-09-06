@@ -10,7 +10,7 @@
 class Differentiator : public VisitorExpr
 {
 public:
-	Differentiator (const Context &con)
+	Differentiator (const DC::Context &con)
 		: context (con)
 	{
 	}
@@ -20,10 +20,10 @@ public:
 	ExpressionNode *visit (BinOpNode *)    override;
 	ExpressionNode *visit (FunctionNode *) override;
 
-	static ExpressionNode *differentiate (ExpressionNode *pnode, const Context &context);
+	static ExpressionNode *differentiate (ExpressionNode *pnode, const DC::Context &context);
 
 private:
-	const Context& context;
+	const DC::Context& context;
 };
 
 

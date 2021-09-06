@@ -1,5 +1,7 @@
 #include "Context.h"
 
+using namespace DC;
+
 bool Context::inScope (const std::string &name) const
 {
     return symbol_table.find (name) != symbol_table.end();

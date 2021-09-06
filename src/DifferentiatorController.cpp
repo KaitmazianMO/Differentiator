@@ -43,15 +43,14 @@ DC::DifferentiatorController::DifferentiatorController (
 void DC::DifferentiatorController::run (const std::string &diff_var)  
 {   
     log ("Start reading expression...");
-    std::string expression = readFromStream (expression_stream);
+    static std::string expression = readFromStream (expression_stream); // Token locations have pointers to this string all the time, so after we got exception the string is distructed on the higher levels and we can't use it. So avoid the string distuctor.
     if (expression.empty())
         return;
     log ("Finished reading.");
 
     log ("Start tokenizing..." );
-    std::cerr << "\'" << expression << "\'" << std::endl;
     Lexer lexer (expression.c_str());
-    lexer.tokenize();                                  
+    lexer.tokenize();                                                                               
     log ("Finished tokenizing.");
 
     log ("Start parsing...");
@@ -60,7 +59,7 @@ void DC::DifferentiatorController::run (const std::string &diff_var)
     { 
         parser.parse (lexer.getFirstTokenIt(), lexer.getLastTokenIt());
     }
-    catch (const BasicException &bex)
+    catch (const ParserException &pex)
     {
         if (flags.error_constructed_tree_dump.active) 
             GraphvizPrinter::dump ("InitialExpression(error)", parser.getAST());

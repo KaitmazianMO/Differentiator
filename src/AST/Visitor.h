@@ -31,6 +31,16 @@ public:
 	virtual ExpressionNode *visit (VariableNode *) = 0;		  
 	virtual ExpressionNode *visit (BinOpNode *)    = 0;		  
 	virtual ExpressionNode *visit (FunctionNode *) = 0;		  												  
-};															  
+};		
+
+class VisitorOptimizer
+{
+	virtual ~VisitorOptimizer() = default;						  
+															  
+	virtual void visit (NumberNode **)   = 0;		  
+	virtual void visit (VariableNode **) = 0;		  
+	virtual void visit (BinOpNode **)    = 0;		  
+	virtual void visit (FunctionNode **) = 0;		  												  
+};
 
 #endif

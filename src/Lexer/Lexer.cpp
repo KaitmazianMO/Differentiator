@@ -4,8 +4,6 @@
 #include <exception>
 #include <iostream>
 
-#define call  std::cout << "Called " << __func__ << std::endl;
-
 Lexer::Lexer (const char *source_code_) :
     source_code (source_code_),
     curr_loc    ()
@@ -24,7 +22,6 @@ Lexer::Lexer (const char *source_code_) :
 
 Token Lexer::getNextTok()
 {
-    call
     while (true)
     { 
         char front = curr_loc.peek();
@@ -73,7 +70,6 @@ void Lexer::tokenize()
 
 Token Lexer::getNumberToken()
 {
-    call
     while (isdigit (curr_loc.advance (1)))
         ;
 
@@ -83,44 +79,37 @@ Token Lexer::getNumberToken()
 
 Token Lexer::getIdentifierlToken()
 {
-    call
-    do 
+    while (isalpha (curr_loc.peek()) || isdigit (curr_loc.peek()))
     {
-        std::cout << curr_loc.advance (1) << " ";
+        curr_loc.advance (1);
     }
-    while (isalpha (curr_loc.peek()) || isdigit (curr_loc.peek()));
 
-    std::cout << "The last id char " << curr_loc.peek() << "(" << int (curr_loc.peek()) << ")" << std::endl;
-
-    Token tok = newToken (TokType::identifier);
-
-    return tok;
+    return newToken (TokType::identifier);
 }
 
 Token Lexer::newToken (TokType ttype)
 {
-    call
     Token tok (ttype, curr_loc.str(), curr_loc);
-    std::cout << "**Tok " << curr_loc.str() << std::endl;
     curr_loc.nextTok();
     return tok;
 }
 
 void Lexer::skipLines()
-{   /* UNIX - '\n' MACOS - '\r\n' WINDOWS - '\n\r' */
-    call
-    if (curr_loc.peek() == '\r') curr_loc.advance (1);
+{
+    if (curr_loc.peek() == '\r') 
+        curr_loc.advance (1);
+    
     while (curr_loc.peek() == '\n')
     {
         curr_loc.advance (1);
-        if (curr_loc.peek() == '\r') curr_loc.advance (1);
+        if (curr_loc.peek() == '\r')
+            curr_loc.advance (1);
         curr_loc.newLine();
     }
 }
 
 void  Lexer::skipWhitespaces()
 {
-    call
     while (curr_loc.peek() == ' ' ||
         curr_loc.peek() == '\t' || 
         curr_loc.peek() == '\f' ||

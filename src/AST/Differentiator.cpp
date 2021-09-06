@@ -98,7 +98,7 @@ ExpressionNode *Differentiator::visit (FunctionNode *pnode)
     return nullptr;
 }
 
-ExpressionNode *Differentiator::differentiate (ExpressionNode *pnode, const Context &context)
+ExpressionNode *Differentiator::differentiate (ExpressionNode *pnode, const DC::Context &context)
 {
     Differentiator differentiator (context);
     if (pnode)

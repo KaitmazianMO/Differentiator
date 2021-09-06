@@ -5,17 +5,19 @@
 #include "Visitor.h"
 #include <vector>
 
-class ConstantFolder : public VisitorVoid
-{
-public:
-	void visit (NumberNode *)   override;
-	void visit (VariableNode *) override;
-	void visit (BinOpNode *)    override;
-	void visit (FunctionNode *) override;
-
-private:
-	std::vector<BinOpNode *> op_const_trace;	// or stack
-};
+//class ConstantFolder : public VisitorOptimizer
+//{
+//public:
+//	ConstantFolder() = default;
+//
+//	void visit (NumberNode **)   override;
+//	void visit (VariableNode **) override;
+//	void visit (BinOpNode **)    override;
+//	void visit (FunctionNode **) override;
+//
+//private:
+//	std::vector<BinOpNode **> operations_trace;
+//};
 
 
 #endif // !OPTIMIZER_H_INCLUDED
