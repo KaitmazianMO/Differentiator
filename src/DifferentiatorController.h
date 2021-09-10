@@ -1,6 +1,7 @@
 #ifndef DIFFERENTIATOR_CONTROLLER_H_INCLUDED
 #define DIFFERENTIATOR_CONTROLLER_H_INCLUDED
 
+
 #include "NonCopyable.h"
 #include "Lexer/Lexer.h"
 #include "Parser/Parser.h"
@@ -16,15 +17,11 @@ namespace DC
     
     struct Flags
     {    
-        struct OutputFormat { explicit OutputFormat (Format f) : format (f) {} Format format; };
-        struct InputFormat  { explicit InputFormat  (Format f) : format (f) {} Format format; };
         struct DoInitialTreeDump            { explicit DoInitialTreeDump          (bool dump) : active (dump) {} bool active; };
         struct DoDifferentiatedTreeDump     { explicit DoDifferentiatedTreeDump   (bool dump) : active (dump) {} bool active; };
         struct DoOptimizedTreeDump          { explicit DoOptimizedTreeDump        (bool dump) : active (dump) {} bool active; };
         struct DoErrorConstructedTreeDump   { explicit DoErrorConstructedTreeDump (bool dump) : active (dump) {} bool active; };
     
-        InputFormat                input                       = InputFormat   (Format::ordinary);
-        OutputFormat               output                      = OutputFormat (Format::ordinary);
         DoInitialTreeDump          initial_tree_dump           = DoInitialTreeDump (false);  
         DoDifferentiatedTreeDump   differentiated_tree_dump    = DoDifferentiatedTreeDump (false); 
         DoOptimizedTreeDump        optimized_tree_dump         = DoOptimizedTreeDump (false); 
@@ -34,11 +31,7 @@ namespace DC
     class DifferentiatorController : NonCopyable
     {
     public:
-        explicit DifferentiatorController (
-            std::istream& expression_stream,
-            std::ostream& output_stream,   
-            Flags::InputFormat iformat = Flags::InputFormat (Format::ordinary),
-            Flags::OutputFormat oformat = Flags::OutputFormat (Format::ordinary),
+        explicit DifferentiatorController ( 
             Flags::DoInitialTreeDump initial_tree_dump = Flags::DoInitialTreeDump (false),  
             Flags::DoDifferentiatedTreeDump differentiated_tree_dump = Flags::DoDifferentiatedTreeDump (false), 
             Flags::DoOptimizedTreeDump optimized_tree_dump = Flags::DoOptimizedTreeDump (false), 
@@ -46,8 +39,6 @@ namespace DC
         );
     
         Flags bind (
-            Flags::InputFormat iformat = Flags::InputFormat (Format::ordinary),
-            Flags::OutputFormat oformat = Flags::OutputFormat (Format::ordinary),
             Flags::DoInitialTreeDump initial_tree_dump = Flags::DoInitialTreeDump (false),  
             Flags::DoDifferentiatedTreeDump differentiated_tree_dump = Flags::DoDifferentiatedTreeDump (false), 
             Flags::DoOptimizedTreeDump optimized_tree_dump = Flags::DoOptimizedTreeDump (false), 
@@ -55,15 +46,19 @@ namespace DC
         );
 
         Flags bind (Flags);
-
-        void run (const std::string &diff_var);
-    
+                       
+        void setDifferentiationVariable (const std::string &name, double val);
+        void differentiate (const std::string &expr);
+        void differentiate (std::ifstream &expr_is);
+        void write (std::ostream &os, Format format);
+        double compute();
     private:
         Flags         flags;
-        std::istream &expression_stream;
-        std::ostream &output_stream;
-    
+                                              
+        ExpressionNode *diffAST = nullptr;
+        DC::Context     context = DC::Context ("x");
     };
 }
+
 
 #endif // !DIFFERENTIATOR_CONTROLLER_H_INCLUDED

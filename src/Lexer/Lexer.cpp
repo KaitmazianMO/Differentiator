@@ -3,21 +3,15 @@
 #include <assert.h>
 #include <exception>
 #include <iostream>
+#include <string>
 
-Lexer::Lexer (const char *source_code_) :
+Lexer::Lexer (const std::string &source_code_) :
     source_code (source_code_),
     curr_loc    ()
 {
-    if (source_code)
-    {             
-        curr_loc.line_beg  = source_code;
-        curr_loc.first_sym = source_code;
-        curr_loc.last_sym  = source_code;
-    }
-    else
-    {
-        throw LexerException ("Invadid sourse code (nullptr)");
-    }
+    curr_loc.line_beg  = &source_code[0];
+    curr_loc.first_sym = &source_code[0];
+    curr_loc.last_sym  = &source_code[0];
 }
 
 Token Lexer::getNextTok()
@@ -53,6 +47,9 @@ Token Lexer::getNextTok()
 
         case '\0': case EOF:
             return Token (TokType::eof, "eof", curr_loc);
+
+        default:
+            throw LexerException ("Unknown symbol(" + std::to_string (front) + ")");
         }
     }
 
@@ -70,8 +67,8 @@ void Lexer::tokenize()
 
 Token Lexer::getNumberToken()
 {
-    while (isdigit (curr_loc.advance (1)))
-        ;
+    while (isdigit (curr_loc.peek()) || curr_loc.peek() == '.')
+        curr_loc.advance (1);
 
     Token tok = newToken (TokType::number);
     return tok;

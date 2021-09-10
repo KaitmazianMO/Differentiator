@@ -20,9 +20,9 @@ double Context::getValue (const std::string &name) const
     return it->second;
 }
 
-void Context::newName (const std::string &name)
+void Context::newName (const std::string &name, double val)
 {
-    symbol_table[name] = 0;
+    symbol_table[name] = val;
 }
 
 bool Context::setValue (const std::string &name, double val)
@@ -34,10 +34,10 @@ bool Context::setValue (const std::string &name, double val)
     return true;
 }                                      
 
-void Context::setDiffVar (const std::string &name)
+void Context::setDiffVar (const std::string &name, double val)
 {
+    newName (name, val);
     differentiating_varriable = name;
-    newName (name);
 }
 
 Context::Context (const std::string &diff_var)
@@ -50,4 +50,9 @@ Context::Context()
     : differentiating_varriable ("x")
 {
     newName (differentiating_varriable);
+}
+
+std::string Context::getDiffVarName() const
+{
+    return differentiating_varriable;
 }

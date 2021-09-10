@@ -2,6 +2,7 @@
 #define LOCATIION_H_INCLUDED 
 
 #include <string>
+#include <string_view>
 
 struct Location
 {

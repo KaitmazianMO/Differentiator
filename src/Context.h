@@ -18,10 +18,11 @@ namespace DC
         bool inScope (const std::string &name) const;
         double getValue (const std::string &name) const;
         bool isDiffVar (const std::string &name) const;
-                                               
-        void newName (const std::string &name);
+        std::string getDiffVarName() const;
+                                                
+        void newName (const std::string &name, double val = 0);
         bool setValue (const std::string &name, double val);
-        void setDiffVar (const std::string &name);
+        void setDiffVar (const std::string &name, double val = 0);
     
     private:
         std::string differentiating_varriable;

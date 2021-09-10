@@ -47,7 +47,7 @@ class Lexer
 {
 public:
     Lexer () = default;
-    Lexer (const char *source_code);
+    Lexer (const std::string &source_code);
    ~Lexer () = default;
 
     void tokenize();
@@ -66,7 +66,7 @@ private:
     void  skipWhitespaces();
 
 
-    const char        *source_code;               
+    const std::string  source_code;               
     Location           curr_loc;
     std::vector<Token> tokens; 
 };

@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <Windows.h>
+#include <sstream>
 
 #include "File.h"
 #include "Lexer/Token.h"
@@ -19,39 +20,34 @@ void printLine (std::ostream &os, const char *line);
 
 int main()
 {
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY);
+    //std::cout << "\033[4;31m" << "bold red text\033[0m\n";
     try 
     {
-
         std::ifstream expr_in ("D:\\Projects C++\\Differentiator\\src\\Expression.txt");
         std::ofstream latex_expr_out ("D:\\Projects C++\\Differentiator\\src\\Latex.tex");
 
-        DifferentiatorController dc (
-            expr_in, latex_expr_out,                   
-            Flags::InputFormat (Format::ordinary),
-            Flags::OutputFormat (Format::latex),
+        DifferentiatorController dc (                 
             Flags::DoInitialTreeDump (true),  
             Flags::DoDifferentiatedTreeDump (true), 
             Flags::DoOptimizedTreeDump (true), 
             Flags::DoErrorConstructedTreeDump (true) 
         );
 
-        dc.run ("x");
-    } 
-    catch (const LexerException &lex)
-    {
-        std::cerr << "error: " << lex.what() << std::endl;
-    }                                                     
-    catch (const ParserException &pex)
+        dc.setDifferentiationVariable ("x", 42);
+        dc.differentiate (expr_in);
+        dc.write (latex_expr_out, Format::latex);
+        std::cout << "Result = " << dc.compute() << std::endl;
+    }                                            
+    catch (const BasicException &bex)
     {         
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
-        std::cerr << "error(" << pex.errLoc().nline << "): " << pex.what() << std::endl;
+        SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), FOREGROUND_RED);
+        std::cerr << "error(" << bex.errLoc().nline << "): " << bex.what() << std::endl;
         std::cerr << "\'";
-        printLine (std::cerr, pex.errLoc().line_beg);
+        printLine (std::cerr, bex.errLoc().line_beg);
         std::cerr << "\'" << std::endl;
-        printNChar (std::cerr, pex.errLoc().first_sym - pex.errLoc().line_beg, ' ');
+        printNChar (std::cerr, bex.errLoc().first_sym - bex.errLoc().line_beg, ' ');
         std::cerr << "~^~" << std::endl;                                                
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+        SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
     }
     catch (const std::exception &ex)
     {
