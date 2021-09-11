@@ -36,82 +36,16 @@ DC::DifferentiatorController::DifferentiatorController (
     flags.error_constructed_tree_dump = error_constructed_tree_dump;
 }
 
-//void DC::DifferentiatorController::run (const DC::Context &context)  
-//{   
-//    SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY);
-//    log ("Start reading expression...");
-//    static const std::string expression = readFromStream (expression_stream); // Token locations have pointers to this string all the time, so after we got exception the string is distructed on the higher levels and we can't use it. So avoid the string distuctor.
-//    std::cout << "Expr = " << expression << std::endl;
-//    if (expression.empty())
-//        return;
-//    log ("Finished reading.");
-//
-//    run (expression, context);
-//}
-//
-//void DC::DifferentiatorController::run (const std::string &expression, const DC::Context &context)
-//{
-//    ExpressionNode *AST = nullptr;
-//    try 
-//    { 
-//        AST = buildAST (expression);
-//    }
-//    catch (const BasicException &bex)
-//    {
-//        if (flags.error_constructed_tree_dump.active) 
-//            GraphvizPrinter::dump ("InitialExpression(error)", AST);
-//        ASTDeleter::free (AST);
-//        throw;
-//    }                                                    
-//    log ("Finished parsing.");
-//
-//    if (flags.initial_tree_dump.active) 
-//        GraphvizPrinter::dump ("InitialExpression", AST);
-//
-//    log ("Differentiating...");
-//    auto diff_AST = Differentiator::differentiate (AST, context);
-//    log ("Differentiating's finished.");
-//
-//    if (flags.differentiated_tree_dump.active) 
-//        GraphvizPrinter::dump ("DifferentiatedExpression", diff_AST);
-//
-//    log ("Deleting source AST...");
-//    ASTDeleter::free (AST); 
-//    
-//    log ("Writing...");
-//    if (flags.output.format == Format::latex)
-//        massiveLatexEquationWritingPattern (output_stream, diff_AST);
-//    else if (flags.output.format == Format::ordinary)
-//        output_stream << OrdinaryExpressionFormater::to_string (diff_AST) << std::endl;
-//    log ("Finished writing.");
-//    
-//    //optimize (diff_AST);                                                                                         
-//    SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-//    //std::cout << "Enter " << diff_var << ": ";
-//    //double dval = 0;
-//    //std::cin >> dval;
-//    //context.setValue (diff_var, dval);
-//    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN);
-//    std::cout << "Derivative value: " << Calculator::calculate (diff_AST, context) << std::endl;
-//    SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-//
-//    ASTDeleter::free (diff_AST);    
-//}
-
-void DC::DifferentiatorController::differentiate (std::ifstream &expr_is)
+bool DC::DifferentiatorController::differentiate (std::ifstream &expr_is)
 {
-    SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY);
-    log ("Start reading expression...");
-    static const std::string expression = readFromStream (expr_is); // Token locations have pointers to this string all the time, so after we got exception the string is distructed on the higher levels and we can't use it. So avoid the string distuctor.
-    std::cout << "Expr = " << expression << std::endl;
+    static const std::string expression = readFromStream (expr_is);
     if (expression.empty())
-        return;
-    log ("Finished reading.");
+        return false;
 
-    differentiate (expression);
+    return differentiate (expression);
 }
 
-void DC::DifferentiatorController::differentiate (const std::string &expression)
+bool DC::DifferentiatorController::differentiate (const std::string &expression)
 {   
     if (diffAST)
     {
@@ -130,25 +64,22 @@ void DC::DifferentiatorController::differentiate (const std::string &expression)
         ASTDeleter::free (AST);
         throw;
     }                                                    
-    log ("Finished parsing.");
 
     if (flags.initial_tree_dump.active) 
         GraphvizPrinter::dump ("InitialExpression", AST);
 
-    log ("Differentiating...");
     diffAST = Differentiator::differentiate (AST, context);
-    log ("Differentiating's finished.");
 
     if (flags.differentiated_tree_dump.active) 
         GraphvizPrinter::dump ("DifferentiatedExpression", diffAST);
 
-    log ("Deleting source AST...");
-    ASTDeleter::free (AST);     
+    ASTDeleter::free (AST);  
+
+    return false;
 }
 
-void DC::DifferentiatorController::write (std::ostream &os, Format format)
+bool DC::DifferentiatorController::write (std::ostream &os, Format format)
 {
-    log ("Writing...");
     if (diffAST)
     {
         if (format == Format::latex)
@@ -156,7 +87,8 @@ void DC::DifferentiatorController::write (std::ostream &os, Format format)
         else if (format == Format::ordinary)
             os << OrdinaryExpressionFormater::to_string (diffAST) << std::endl;
     }
-    log ("Finished writing.");
+    
+    return false;
 }
 
 void DC::DifferentiatorController::setDifferentiationVariable (const std::string &name, double val)

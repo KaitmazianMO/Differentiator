@@ -4,11 +4,13 @@
 void LatexExpressionFormater::visit (NumberNode *pnode)
 {
     if (pnode) expression += std::to_string (pnode->val);
+    else       error = true;
 }
 
 void LatexExpressionFormater::visit (VariableNode *pnode) 
 {
     if (pnode) expression += (pnode->name);
+    else       error = true;
 }
 
 void LatexExpressionFormater::visit (BinOpNode *pnode)    
@@ -54,6 +56,7 @@ void LatexExpressionFormater::visit (BinOpNode *pnode)
             break;
         
         default:
+            error = true;
             pnode->left-> doAction (this);
             expression += " NOP ";
             pnode->right->doAction (this);
@@ -73,6 +76,10 @@ void LatexExpressionFormater::visit (FunctionNode *pnode)
         pnode->arg->doAction (this);
         expression += ")";
     }
+    else
+    {
+        error = true;
+    }
 }
 
 std::string LatexExpressionFormater::to_string (ExpressionNode *AST)
@@ -81,7 +88,10 @@ std::string LatexExpressionFormater::to_string (ExpressionNode *AST)
     if (AST)
     {
         AST->doAction (&converter);
-        return converter.getExpr();
+        if (!converter.error)
+        {
+            return converter.getExpr();
+        }
     }
     
     return "";

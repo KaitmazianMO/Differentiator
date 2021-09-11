@@ -60,6 +60,10 @@ void GraphvizPrinter::visit (VariableNode *pnode)
 			GraphwizForamter::Shape::reclangle
 		);
 	}
+	else
+	{
+		error = true;
+	}
 }
 
 void GraphvizPrinter::visit (BinOpNode *pnode)    
@@ -77,6 +81,10 @@ void GraphvizPrinter::visit (BinOpNode *pnode)
 			to_string (pnode->op),
 			GraphwizForamter::Shape::circle
 		); 
+	}
+	else
+	{
+		error = true;
 	}		 
 }
 
@@ -95,6 +103,10 @@ void GraphvizPrinter::visit (FunctionNode *pnode)
 			reinterpret_cast<size_t> (pnode->arg), 
 			""
 		);		
+	} 
+	else
+	{
+		error = true;
 	}
 }
 
@@ -104,10 +116,9 @@ bool GraphvizPrinter::dump (std::ostream &os, ExpressionNode *AST)
 	if (AST)
 	{
 		AST->doAction (&gprinter);
-		return true;
 	}
 
-	return false;
+	return !gprinter.error;
 }
 
 bool GraphvizPrinter::dump (const std::string &file_name, ExpressionNode *AST)

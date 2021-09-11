@@ -20,6 +20,8 @@ public:
 	virtual void visit (VariableNode *) = 0;
 	virtual void visit (BinOpNode *)    = 0;
 	virtual void visit (FunctionNode *) = 0;
+
+	bool error = false;
 };
 
 class VisitorExpr
@@ -30,7 +32,9 @@ public:
 	virtual ExpressionNode *visit (NumberNode *)   = 0;		  
 	virtual ExpressionNode *visit (VariableNode *) = 0;		  
 	virtual ExpressionNode *visit (BinOpNode *)    = 0;		  
-	virtual ExpressionNode *visit (FunctionNode *) = 0;		  												  
+	virtual ExpressionNode *visit (FunctionNode *) = 0;
+
+	bool error = false;		  												  
 };		
 
 class VisitorOptimizer
@@ -40,7 +44,9 @@ class VisitorOptimizer
 	virtual void visit (NumberNode **)   = 0;		  
 	virtual void visit (VariableNode **) = 0;		  
 	virtual void visit (BinOpNode **)    = 0;		  
-	virtual void visit (FunctionNode **) = 0;		  												  
+	virtual void visit (FunctionNode **) = 0;
+
+	bool error = false;		  												  
 };
 
 #endif

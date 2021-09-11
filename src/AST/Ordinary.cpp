@@ -4,11 +4,13 @@
 void OrdinaryExpressionFormater::visit (NumberNode *pnode)
 {
     if (pnode) expression += std::to_string (pnode->val);
+    else       error = true;
 }
 
 void OrdinaryExpressionFormater::visit (VariableNode *pnode) 
 {
     if (pnode) expression += (pnode->name);
+    else       error = true;
 }
 
 void OrdinaryExpressionFormater::visit (BinOpNode *pnode)    
@@ -26,6 +28,10 @@ void OrdinaryExpressionFormater::visit (BinOpNode *pnode)
         
         ops.pop();
     }
+    else
+    {
+        error = true;
+    }
 }
 
 void OrdinaryExpressionFormater::visit (FunctionNode *pnode)
@@ -36,6 +42,10 @@ void OrdinaryExpressionFormater::visit (FunctionNode *pnode)
         pnode->arg->doAction (this);
         expression += ")";
     }
+    else
+    {
+        error = true;
+    }
 }
 
 std::string OrdinaryExpressionFormater::to_string (ExpressionNode *AST)
@@ -44,7 +54,10 @@ std::string OrdinaryExpressionFormater::to_string (ExpressionNode *AST)
     if (AST)
     {
         AST->doAction (&converter);
-        return converter.getExpr();
+        if (!converter.error)
+        {
+            return converter.getExpr();
+        }
     }
     
     return "";

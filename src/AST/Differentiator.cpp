@@ -3,11 +3,16 @@
 
 ExpressionNode *Differentiator::visit (NumberNode *pnode)  
 {
+    if (!pnode) 
+        error = true;
     return new NumberNode (0);
 }
 
 ExpressionNode *Differentiator::visit (VariableNode *pnode)
 {
+    if (!pnode) 
+        error = true;
+    
     if (pnode && context.isDiffVar (pnode->name))
         return new NumberNode (1);
 
@@ -45,6 +50,8 @@ ExpressionNode *Differentiator::visit (BinOpNode *pnode)
         }
         }
     }
+
+    error = true;
     return nullptr;
 }
 
@@ -95,6 +102,8 @@ ExpressionNode *Differentiator::visit (FunctionNode *pnode)
             return nullptr; 
         }
     }
+
+    error = true;
     return nullptr;
 }
 
@@ -103,7 +112,11 @@ ExpressionNode *Differentiator::differentiate (ExpressionNode *pnode, const DC::
     Differentiator differentiator (context);
     if (pnode)
     {
-        return pnode->getAction (&differentiator);
+        auto diff = pnode->getAction (&differentiator);
+        if (!differentiator.error)
+        {
+            return diff;
+        }
     }
 
     return nullptr;

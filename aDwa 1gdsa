@@ -1,0 +1,41 @@
+[33mcommit e78ccec81bcb6c1f322b1446c7fa81ab2eaeaecb[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Maksim <kaitmazian.mo@phystech.edu>
+Date:   Fri Sep 10 13:51:55 2021 +0300
+
+    Contorller refator && ex bug
+
+[33mcommit 1ffb3566b74055518958ef43677aec59e5b83427[m
+Author: Maksim <kaitmazian.mo@phystech.edu>
+Date:   Mon Sep 6 15:52:56 2021 +0300
+
+    calculating
+
+[33mcommit 5f8a1f4bb4c339f437d8b14cd1271c19aae7af78[m
+Author: Maksim <kaitmazian.mo@phystech.edu>
+Date:   Mon Sep 6 12:27:23 2021 +0300
+
+    error printing && reafctor && context
+
+[33mcommit 603090f9c6d2e412431a75adca6639874a8ee622[m
+Author: Maksim <kaitmazian.mo@phystech.edu>
+Date:   Sun Sep 5 00:02:55 2021 +0300
+
+    derivatives && latex div paren fix
+
+[33mcommit 6fc8c0bef2ecb9e7a5544f0a56662ca453d7a676[m
+Author: Maksim <kaitmazian.mo@phystech.edu>
+Date:   Sat Sep 4 23:07:10 2021 +0300
+
+    Context && refactoring
+
+[33mcommit 931411b0b2e4011be0206fab69952af7aaf62ab6[m
+Author: Maksim <kaitmazian.mo@phystech.edu>
+Date:   Fri Sep 3 18:54:51 2021 +0300
+
+    refactor
+
+[33mcommit 930998cf5635fcf7c0994bd5742678377ee48e54[m
+Author: Maksim <kaitmazian.mo@phystech.edu>
+Date:   Thu Sep 2 23:22:45 2021 +0300
+
+    do not look

@@ -20,7 +20,6 @@ void printLine (std::ostream &os, const char *line);
 
 int main()
 {
-    //std::cout << "\033[4;31m" << "bold red text\033[0m\n";
     try 
     {
         std::ifstream expr_in ("D:\\Projects C++\\Differentiator\\src\\Expression.txt");
@@ -34,9 +33,15 @@ int main()
         );
 
         dc.setDifferentiationVariable ("x", 42);
-        dc.differentiate (expr_in);
-        dc.write (latex_expr_out, Format::latex);
-        std::cout << "Result = " << dc.compute() << std::endl;
+        if (dc.differentiate (expr_in))
+        { 
+            dc.write (latex_expr_out, Format::latex);
+            std::cout << "Result = " << dc.compute() << std::endl;
+        }
+        else
+        {
+            std::cerr << "Differentiation failed\n";
+        }
     }                                            
     catch (const BasicException &bex)
     {         
@@ -51,7 +56,9 @@ int main()
     }
     catch (const std::exception &ex)
     {
+        SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), FOREGROUND_RED);
         std::cerr << "error: " << ex.what() << std::endl;
+        SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
     }
 
     return 0;

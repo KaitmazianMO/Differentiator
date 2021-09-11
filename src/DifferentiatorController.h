@@ -48,12 +48,12 @@ namespace DC
         Flags bind (Flags);
                        
         void setDifferentiationVariable (const std::string &name, double val);
-        void differentiate (const std::string &expr);
-        void differentiate (std::ifstream &expr_is);
-        void write (std::ostream &os, Format format);
+        bool differentiate (const std::string &expr);
+        bool differentiate (std::ifstream &expr_is);
+        bool write (std::ostream &os, Format format);
         double compute();
     private:
-        Flags         flags;
+        Flags           flags;
                                               
         ExpressionNode *diffAST = nullptr;
         DC::Context     context = DC::Context ("x");

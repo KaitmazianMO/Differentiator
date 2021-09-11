@@ -10,10 +10,6 @@
 #include "../TextLocation.h"
 #include "Visitor.h"
 
-/*
- *@todo opStr funcStr are terrible methods, it's should be external functions
- */
-
 struct ExpressionNode;
 using ExprNodePtr = ExpressionNode *;
 

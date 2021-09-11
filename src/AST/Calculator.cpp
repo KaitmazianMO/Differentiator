@@ -11,6 +11,7 @@ void Calculator::visit (NumberNode *pnode)
     } 
     else
     {
+        error = true;
         calc_values.push (1);
     }
 }
@@ -29,7 +30,8 @@ void Calculator::visit (VariableNode *pnode)
         }
     }                                 
     else
-    {
+    {      
+        error = true;
         calc_values.push (1);
     }
 }
@@ -72,6 +74,10 @@ void Calculator::visit (BinOpNode *pnode)
             throw std::runtime_error ("Unkown or uncalculatable operation");
         }
     }
+    else 
+    {
+        error = true;
+    }
 }
 
 void Calculator::visit (FunctionNode *pnode) 
@@ -109,7 +115,10 @@ void Calculator::visit (FunctionNode *pnode)
             throw std::runtime_error ("Unkown or uncalculatable operation");
         }
     }
-   
+    else 
+    {
+        error = true;
+    }
 }
 
 
@@ -118,10 +127,14 @@ double Calculator::calculate (ExpressionNode *AST, const DC::Context& context)
     if (AST)
     {
         Calculator calc (context);
+        calc.error = false;
         AST->doAction (&calc);
-        return calc.getTopValue();
+        if (!calc.error)
+        {
+            return calc.getTopValue();
+        }
     }
-    return 0;
+    return NAN;
 }
 
 double Calculator::getTopAndPop()
